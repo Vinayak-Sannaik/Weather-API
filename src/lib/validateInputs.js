@@ -1,3 +1,5 @@
+// import { useCallback } from "react";
+
 export const validateInputs = (inputs) => {
     if (!inputs.latitude || !inputs.longitude || !inputs.startDate || !inputs.endDate) {
       return { valid: false, error: 'All fields are required' };
@@ -7,7 +9,7 @@ export const validateInputs = (inputs) => {
     if (isNaN(lat) || lat < -90 || lat > 90) {
       return { valid: false, error: 'Invalid latitude (-90 to 90)' };
     }
-
+  
     const lon = parseFloat(inputs.longitude);
     if (isNaN(lon) || lon < -180 || lon > 180) {
       return { valid: false, error: 'Invalid longitude (-180 to 180)' };
@@ -21,4 +23,3 @@ export const validateInputs = (inputs) => {
   
     return { valid: true, error: '' };
   };
-  
