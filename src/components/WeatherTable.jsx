@@ -1,8 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 const WeatherTable = ({ data, page, setPage }) => {
   const rowsPerPage = 10;
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const totalPages = Math.max(1, Math.ceil(data.length / rowsPerPage));
+
+  useEffect(() => {
+    if (page < 1) setPage(1);
+  }, [page, setPage]);
 
   return (
     <Card>
@@ -26,8 +34,8 @@ const WeatherTable = ({ data, page, setPage }) => {
               </tr>
             </thead>
             <tbody>
-              {data.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((row, index) => (
-                <tr key={index}>
+              {data.slice(startIndex, endIndex).map((row, index) => (
+                <tr key={startIndex + index} className="hover:bg-gray-50">
                   <td className="p-2">{row.date}</td>
                   <td className="p-2">{row.maxTemp}°C</td>
                   <td className="p-2">{row.minTemp}°C</td>
@@ -45,19 +53,19 @@ const WeatherTable = ({ data, page, setPage }) => {
 
         <div className="flex justify-between items-center mt-4">
           <Button
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-            className="bg-blue-500 text-white"
+            onClick={() => setPage(Math.max(1, page - 1))}
+            disabled={page <= 1}
+            className="bg-blue-600 text-white hover:bg-blue-700"
           >
             Previous
           </Button>
           <span className="text-lg">
-            Page {page} of {Math.ceil(data.length / rowsPerPage)}
+            Page {page} of {totalPages}
           </span>
           <Button
-            disabled={page === Math.ceil(data.length / rowsPerPage)}
-            onClick={() => setPage(page + 1)}
-            className="bg-blue-500 text-white"
+            onClick={() => setPage(Math.min(page + 1, totalPages))}
+            disabled={page >= totalPages}
+            className="bg-blue-600 text-white hover:bg-blue-700"
           >
             Next
           </Button>
